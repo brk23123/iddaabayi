@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Şahin İddaa Bayisi - Canlı ve Gelecek Maçlar</title>
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      background-color: #0b2a4a;
+      color: white;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(90deg, #006633, #009933);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+    }
+    header h1 {
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    header p {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+    .nav-tabs .nav-link {
+      color: #009933;
+      font-weight: 600;
+    }
+    .nav-tabs .nav-link.active {
+      background-color: #009933;
+      color: white;
+      font-weight: 700;
+    }
+    .table {
+      background: #12375b;
+    }
+    .table th {
+      background-color: #009933;
+    }
+    .team-logo {
+      height: 30px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    footer {
+      background-color: #061c30;
+      color: #888;
+      text-align: center;
+      padding: 15px 10px;
+      font-size: 14px;
+    }
+    .btn-bahis {
+      background-color: #ffd700;
+      color: #0b2a4a;
+      font-weight: 700;
+      border-radius: 50px;
+      padding: 10px 30px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+    .btn-bahis:hover {
+      background-color: #e6c200;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Şahin İddaa Bayisi</h1>
+  <p>Güvenilir Bahis, Yüksek Oran, Anında Ödeme</p>
+</header>
+
+<div class="container my-4">
+
+  <ul class="nav nav-tabs" id="matchTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="live-tab" data-bs-toggle="tab" data-bs-target="#live" type="button" role="tab" aria-controls="live" aria-selected="true">CANLI MAÇLAR</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="false">GELECEK MAÇLAR</button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-3" id="matchTabsContent">
+
+    <!-- CANLI MAÇLAR -->
+    <div class="tab-pane fade show active" id="live" role="tabpanel" aria-labelledby="live-tab">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover text-center align-middle">
+          <thead>
+            <tr>
+              <th>Saat</th>
+              <th>Ev Sahibi</th>
+              <th>Skor</th>
+              <th>Konuk</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+          <tbody id="liveMatchesBody">
+            <tr><td colspan="5">Yükleniyor...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GELECEK MAÇLAR -->
+    <div class="tab-pane fade" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover text-center align-middle">
+          <thead>
+            <tr>
+              <th>Tarih / Saat</th>
+              <th>Ev Sahibi</th>
+              <th>Konuk</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+          <tbody id="upcomingMatchesBody">
+            <tr><td colspan="4">Yükleniyor...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="text-center">
+    <button class="btn-bahis" onclick="alert('Bahis sayfası yakında aktif olacak!')">Bahis Yap</button>
+  </div>
+
+  <div class="social-icons text-center mt-4">
+    <a href="https://www.facebook.com" target="_blank" class="me-3" title="Facebook"><i class="fab fa-facebook fa-2x" style="color:#3b5998"></i></a>
+    <a href="https://twitter.com" target="_blank" class="me-3" title="Twitter"><i class="fab fa-twitter fa-2x" style="color:#00acee"></i></a>
+    <a href="https://www.instagram.com" target="_blank" title="Instagram"><i class="fab fa-instagram fa-2x" style="color:#bc2a8d"></i></a>
+  </div>
+
+</div>
+
+<footer>
+  © 2025 Şahin İddaa Bayisi – 18+ Sorumlu Oyun Politikası
+</footer>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const apiKey = 'YOUR_API_KEY_HERE'; // API-Football API key'nizi buraya koyun
+
+  async function getMatches(status) {
+    // status = "live" veya "NS" (not started)
+    let url = `https://v3.football.api-sports.io/fixtures?status=${status}&league=1958&season=2023`; 
+    // 1958 = Türkiye Süper Lig (2023 sezonu)
+    // Eğer başka ligler istiyorsan buraya eklenebilir
+
+    try {
+      const response = await fetch(url, {
+        headers: { 'x-apisports-key': apiKey }
+      });
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  function createTeamCell(team) {
+    return `<img src="${team.logo}" alt="${team.name}" class="team-logo me-2" style="height: 30px; vertical-align: middle;">${team.name}`;
+  }
+
+  function createLiveRow(match) {
+    return `
+      <tr>
+        <td>${new Date(match.fixture.date).toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})}</td>
+        <td>${createTeamCell(match.teams.home)}</td>
+        <td>${match.goals.home ?? '-'} - ${match.goals.away ?? '-'}</td>
+        <td>${createTeamCell(match.teams.away)}</td>
+        <td>${match.fixture.status.short === '1H' ? 'İlk Yarı' : match.fixture.status.long}</td>
+      </tr>
+    `;
+  }
+
+  function createUpcomingRow(match) {
+    return `
+      <tr>
+        <td>${new Date(match.fixture.date).toLocaleString('tr-TR', {dateStyle:'short', timeStyle:'short'})}</td>
+        <td>${createTeamCell(match.teams.home)}</td>
+        <td>${createTeamCell(match.teams.away)}</td>
+        <td>${match.fixture.status.long}</td>
+      </tr>
+    `;
+  }
+
+  async function loadMatches() {
+    // Canlı maçları al
+    const liveMatches = await getMatches('live');
+    const liveBody = document.getElementById('liveMatchesBody');
+    if(liveMatches.length === 0) {
+      liveBody.innerHTML = `<tr><td colspan="5">Şu anda canlı maç bulunmamaktadır.</td></tr>`;
+    } else {
+      liveBody.innerHTML = liveMatches.map(createLiveRow).join('');
+    }
+
+    // Gelecek maçları al
+    const upcomingMatches = await getMatches('NS');
+    const upcomingBody = document.getElementById('upcomingMatchesBody');
+    if(upcomingMatches.length === 0) {
+      upcomingBody.innerHTML = `<tr><td colspan="4">Gelecek maç bulunmamaktadır.</td></tr>`;
+    } else {
+      upcomingBody.innerHTML = upcomingMatches.map(createUpcomingRow).join('');
+    }
+  }
+
+  loadMatches();
+</script>
+
+</body>
+</html>
